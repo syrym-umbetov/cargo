@@ -133,13 +133,22 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         {/* Items Section */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Товары ({items.length})</Text>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => navigation.navigate('AddItem', { clientId })}
-          >
-            <Ionicons name="add" size={20} color="#fff" />
-            <Text style={styles.addButtonText}>Добавить</Text>
-          </TouchableOpacity>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity
+              style={styles.scanButton}
+              onPress={() => navigation.navigate('Scanner', { clientId })}
+            >
+              <Ionicons name="scan-outline" size={20} color="#2596be" />
+              <Text style={styles.scanButtonText}>Отсканировать</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => navigation.navigate('AddItem', { clientId })}
+            >
+              <Ionicons name="add" size={20} color="#fff" />
+              <Text style={styles.addButtonText}>Добавить</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {itemsLoading ? (
@@ -249,7 +258,7 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f8f9fa',
   },
   loadingContainer: {
     flex: 1,
@@ -261,21 +270,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
+    paddingTop: 20,
     backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1a1a1a',
   },
   headerActions: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16,
   },
   headerButton: {
-    padding: 4,
+    padding: 6,
   },
   content: {
     flex: 1,
@@ -307,30 +320,62 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: 'column',
     paddingHorizontal: 16,
-    marginBottom: 12,
+    marginBottom: 16,
+    marginTop: 8,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#333',
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    marginBottom: 12,
   },
-  addButton: {
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  scanButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#2596be',
+    paddingVertical: 12,
+    borderRadius: 12,
+    shadowColor: '#2596be',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  scanButtonText: {
+    color: '#2596be',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  addButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#2596be',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
+    paddingVertical: 12,
+    borderRadius: 12,
+    shadowColor: '#2596be',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 4,
   },
   addButtonText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
-    marginLeft: 4,
+    marginLeft: 6,
   },
   emptyState: {
     alignItems: 'center',

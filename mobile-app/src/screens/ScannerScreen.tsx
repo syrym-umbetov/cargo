@@ -13,12 +13,15 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { MainTabParamList, Client, Item } from '../types';
+import { RootStackParamList, Client, Item } from '../types';
 import { clientsApi, itemsApi, exchangeRatesApi } from '../services/api';
 
-type Props = NativeStackScreenProps<MainTabParamList, 'Scanner'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Scanner'>;
 
 const ScannerScreen: React.FC<Props> = ({ route }) => {
+  console.log('DEBUG: Scanner opened with params:', route.params);
+  const clientIdFromRoute = route.params?.clientId;
+  console.log('DEBUG: clientIdFromRoute:', clientIdFromRoute);
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -46,6 +49,21 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
     queryKey: ['latest-rate'],
     queryFn: () => exchangeRatesApi.getLatestRate(),
   });
+
+  // Auto-select client if clientId is provided from route
+  useEffect(() => {
+    console.log('DEBUG: useEffect triggered');
+    console.log('DEBUG: clientIdFromRoute:', clientIdFromRoute);
+    console.log('DEBUG: clientsData:', clientsData?.data);
+    if (clientIdFromRoute && clientsData?.data) {
+      const client = clientsData.data.find(c => c.id === clientIdFromRoute);
+      console.log('DEBUG: Found client:', client);
+      if (client) {
+        setSelectedClient(client);
+        console.log('DEBUG: Set selected client:', client.name);
+      }
+    }
+  }, [clientIdFromRoute, clientsData]);
 
   const createItemMutation = useMutation({
     mutationFn: itemsApi.createItem,
@@ -186,31 +204,40 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
               Штрих-код: {scannedCode}
             </Text>
 
-            {/* Client Selection */}
-            <Text style={styles.label}>Клиент *</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.clientSelector}
-            >
-              {clientsData?.data.map((client) => (
-                <TouchableOpacity
-                  key={client.id}
-                  style={[
-                    styles.clientChip,
-                    selectedClient?.id === client.id && styles.clientChipSelected
-                  ]}
-                  onPress={() => setSelectedClient(client)}
+            {/* Client Selection - только если clientId не передан */}
+            {!clientIdFromRoute ? (
+              <>
+                <Text style={styles.label}>Клиент *</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={styles.clientSelector}
                 >
-                  <Text style={[
-                    styles.clientChipText,
-                    selectedClient?.id === client.id && styles.clientChipTextSelected
-                  ]}>
-                    {client.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+                  {clientsData?.data.map((client) => (
+                    <TouchableOpacity
+                      key={client.id}
+                      style={[
+                        styles.clientChip,
+                        selectedClient?.id === client.id && styles.clientChipSelected
+                      ]}
+                      onPress={() => setSelectedClient(client)}
+                    >
+                      <Text style={[
+                        styles.clientChipText,
+                        selectedClient?.id === client.id && styles.clientChipTextSelected
+                      ]}>
+                        {client.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </>
+            ) : selectedClient && (
+              <View style={styles.selectedClientInfo}>
+                <Text style={styles.label}>Клиент</Text>
+                <Text style={styles.selectedClientName}>{selectedClient.name}</Text>
+              </View>
+            )}
 
             {/* Form Fields */}
             <Text style={styles.label}>Дата поступления</Text>
@@ -419,6 +446,20 @@ const styles = StyleSheet.create({
     color: '#666',
     textAlign: 'center',
     marginTop: 16,
+  },
+  selectedClientInfo: {
+    backgroundColor: '#f0f9ff',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#2596be',
+    marginBottom: 16,
+  },
+  selectedClientName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2596be',
+    marginTop: 4,
   },
 });
 

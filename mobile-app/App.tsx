@@ -144,6 +144,14 @@ function AppNavigator() {
                 headerShown: false
               }}
             />
+            <Stack.Screen
+              name="Scanner"
+              component={ScannerScreen}
+              options={{
+                headerShown: false,
+                presentation: 'modal'
+              }}
+            />
           </>
         ) : (
           <>
