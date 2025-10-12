@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Share,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -57,6 +58,56 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     );
   };
 
+  const handleShare = async () => {
+    if (!item) return;
+
+    try {
+      let message = `📦 Товар: ${item.productCode}\n\n`;
+
+      if (item.client) {
+        message += `👤 Клиент: ${item.client.name} (${item.client.clientCode})\n`;
+      }
+
+      message += `📅 Дата поступления: ${new Date(item.arrivalDate).toLocaleDateString('ru-RU')}\n`;
+      message += `📊 Количество: ${item.quantity}\n`;
+
+      if (item.weight) {
+        message += `⚖️ Вес: ${item.weight} кг\n`;
+      }
+
+      if (item.priceUsd) {
+        message += `💵 Цена: $${item.priceUsd.toFixed(2)}\n`;
+      }
+
+      if (item.exchangeRate) {
+        message += `💱 Курс: ${item.exchangeRate} тг/$\n`;
+      }
+
+      if (item.amountKzt) {
+        message += `💰 К оплате: ${item.amountKzt.toFixed(2)} тг\n`;
+      }
+
+      if (item.costPrice) {
+        message += `📈 Себестоимость: ${item.costPrice.toFixed(2)} тг\n`;
+      }
+
+      if (item.margin) {
+        message += `📊 Маржа: ${item.margin.toFixed(2)}%\n`;
+      }
+
+      if (item.notes) {
+        message += `\n📝 Заметки: ${item.notes}`;
+      }
+
+      await Share.share({
+        message: message,
+        title: `Товар: ${item.productCode}`,
+      });
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
+  };
+
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -84,9 +135,14 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <Ionicons name="arrow-back" size={28} color="#333" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Детали товара</Text>
-        <TouchableOpacity onPress={handleDelete}>
-          <Ionicons name="trash-outline" size={24} color="#FF3B30" />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={handleShare} style={styles.headerButton}>
+            <Ionicons name="share-outline" size={24} color="#007AFF" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.headerButton}>
+            <Ionicons name="trash-outline" size={24} color="#FF3B30" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView style={styles.content}>
@@ -210,6 +266,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  headerButton: {
+    padding: 4,
   },
   content: {
     flex: 1,

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
+  Linking,
 } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
@@ -61,6 +62,14 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
     },
   ];
 
+  const handleOpenInstagram = () => {
+    Linking.openURL('https://www.instagram.com/arx.cargo?igsh=dmZ3d3AwdXV0OWoy');
+  };
+
+  const handleCallPhone = () => {
+    Linking.openURL('tel:+77053777757');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -100,6 +109,26 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={20} color="#ccc" />
           </TouchableOpacity>
         ))}
+
+        <Text style={styles.sectionTitle}>Контакты</Text>
+
+        <TouchableOpacity style={styles.contactItem} onPress={handleOpenInstagram}>
+          <Ionicons name="logo-instagram" size={24} color="#E4405F" />
+          <View style={styles.contactInfo}>
+            <Text style={styles.contactTitle}>Instagram</Text>
+            <Text style={styles.contactValue}>@arx.cargo</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.contactItem} onPress={handleCallPhone}>
+          <Ionicons name="call-outline" size={24} color="#34C759" />
+          <View style={styles.contactInfo}>
+            <Text style={styles.contactTitle}>Телефон</Text>
+            <Text style={styles.contactValue}>+7 705 377 77 57</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+        </TouchableOpacity>
 
         <Text style={styles.sectionTitle}>Приложение</Text>
 
@@ -194,6 +223,33 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginLeft: 12,
+  },
+  contactItem: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  contactInfo: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  contactTitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 2,
+  },
+  contactValue: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '500',
   },
   appInfo: {
     backgroundColor: '#fff',

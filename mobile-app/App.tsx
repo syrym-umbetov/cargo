@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'react-native';
 
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import { RootStackParamList, MainTabParamList } from './src/types';
@@ -23,6 +24,16 @@ import ItemDetailScreen from './src/screens/ItemDetailScreen';
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
+
+function LogoTitle() {
+  return (
+    <Image
+      source={require('./assets/logo.png')}
+      style={{ width: 40, height: 40 }}
+      resizeMode="contain"
+    />
+  );
+}
 
 function MainTabs() {
   return (
@@ -53,6 +64,7 @@ function MainTabs() {
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: 'gray',
         headerShown: true,
+        headerLeft: () => <LogoTitle />,
       })}
     >
       <Tab.Screen
