@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -31,6 +31,18 @@ const AddItemScreen: React.FC<Props> = ({ route, navigation }) => {
   const [margin, setMargin] = useState('');
   const [notes, setNotes] = useState('');
   const queryClient = useQueryClient();
+
+  // Refs for input fields
+  const productCodeRef = useRef<TextInput>(null);
+  const arrivalDateRef = useRef<TextInput>(null);
+  const quantityRef = useRef<TextInput>(null);
+  const weightRef = useRef<TextInput>(null);
+  const priceUsdRef = useRef<TextInput>(null);
+  const exchangeRateRef = useRef<TextInput>(null);
+  const costPriceRef = useRef<TextInput>(null);
+  const marginRef = useRef<TextInput>(null);
+  const notesRef = useRef<TextInput>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Get latest exchange rate
   const { data: latestRate } = useQuery({
@@ -121,60 +133,161 @@ const AddItemScreen: React.FC<Props> = ({ route, navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.content}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={true}
+        >
           <View style={styles.form}>
-            <Text style={styles.label}>Код товара *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Например: PROD001"
-              value={productCode}
-              onChangeText={setProductCode}
-              autoCapitalize="characters"
-            />
+            <View onLayout={(event) => {
+              if (productCodeRef.current) {
+                (productCodeRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Код товара *</Text>
+              <TextInput
+                ref={productCodeRef}
+                style={styles.input}
+                placeholder="Например: PROD001"
+                value={productCode}
+                onChangeText={setProductCode}
+                autoCapitalize="characters"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (productCodeRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => arrivalDateRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Дата поступления *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="ГГГГ-ММ-ДД"
-              value={arrivalDate}
-              onChangeText={setArrivalDate}
-            />
+            <View onLayout={(event) => {
+              if (arrivalDateRef.current) {
+                (arrivalDateRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Дата поступления *</Text>
+              <TextInput
+                ref={arrivalDateRef}
+                style={styles.input}
+                placeholder="ГГГГ-ММ-ДД"
+                value={arrivalDate}
+                onChangeText={setArrivalDate}
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (arrivalDateRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => quantityRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Количество *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="0"
-              value={quantity}
-              onChangeText={setQuantity}
-              keyboardType="numeric"
-            />
+            <View onLayout={(event) => {
+              if (quantityRef.current) {
+                (quantityRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Количество *</Text>
+              <TextInput
+                ref={quantityRef}
+                style={styles.input}
+                placeholder="0"
+                value={quantity}
+                onChangeText={setQuantity}
+                keyboardType="numeric"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (quantityRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => weightRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Вес (кг)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="0.00"
-              value={weight}
-              onChangeText={setWeight}
-              keyboardType="decimal-pad"
-            />
+            <View onLayout={(event) => {
+              if (weightRef.current) {
+                (weightRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Вес (кг)</Text>
+              <TextInput
+                ref={weightRef}
+                style={styles.input}
+                placeholder="0.00"
+                value={weight}
+                onChangeText={setWeight}
+                keyboardType="decimal-pad"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (weightRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => priceUsdRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Цена ($)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="0.00"
-              value={priceUsd}
-              onChangeText={setPriceUsd}
-              keyboardType="decimal-pad"
-            />
+            <View onLayout={(event) => {
+              if (priceUsdRef.current) {
+                (priceUsdRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Цена ($)</Text>
+              <TextInput
+                ref={priceUsdRef}
+                style={styles.input}
+                placeholder="0.00"
+                value={priceUsd}
+                onChangeText={setPriceUsd}
+                keyboardType="decimal-pad"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (priceUsdRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => exchangeRateRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Курс (тг/$)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="0.00"
-              value={exchangeRate}
-              onChangeText={setExchangeRate}
-              keyboardType="decimal-pad"
-            />
+            <View onLayout={(event) => {
+              if (exchangeRateRef.current) {
+                (exchangeRateRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Курс (тг/$)</Text>
+              <TextInput
+                ref={exchangeRateRef}
+                style={styles.input}
+                placeholder="0.00"
+                value={exchangeRate}
+                onChangeText={setExchangeRate}
+                keyboardType="decimal-pad"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (exchangeRateRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => costPriceRef.current?.focus()}
+              />
+            </View>
 
             <Text style={styles.label}>К оплате (тг)</Text>
             <View style={[styles.input, styles.calculatedInput]}>
@@ -183,35 +296,83 @@ const AddItemScreen: React.FC<Props> = ({ route, navigation }) => {
               </Text>
             </View>
 
-            <Text style={styles.label}>Себестоимость (тг)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="0.00"
-              value={costPrice}
-              onChangeText={setCostPrice}
-              keyboardType="decimal-pad"
-            />
+            <View onLayout={(event) => {
+              if (costPriceRef.current) {
+                (costPriceRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Себестоимость (тг)</Text>
+              <TextInput
+                ref={costPriceRef}
+                style={styles.input}
+                placeholder="0.00"
+                value={costPrice}
+                onChangeText={setCostPrice}
+                keyboardType="decimal-pad"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (costPriceRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => marginRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Маржа (%)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="0.00"
-              value={margin}
-              onChangeText={setMargin}
-              keyboardType="decimal-pad"
-            />
+            <View onLayout={(event) => {
+              if (marginRef.current) {
+                (marginRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Маржа (%)</Text>
+              <TextInput
+                ref={marginRef}
+                style={styles.input}
+                placeholder="0.00"
+                value={margin}
+                onChangeText={setMargin}
+                keyboardType="decimal-pad"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (marginRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => notesRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Заметки</Text>
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              placeholder="Дополнительная информация"
-              value={notes}
-              onChangeText={setNotes}
-              multiline
-              numberOfLines={3}
-            />
+            <View onLayout={(event) => {
+              if (notesRef.current) {
+                (notesRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Заметки</Text>
+              <TextInput
+                ref={notesRef}
+                style={[styles.input, styles.textArea]}
+                placeholder="Дополнительная информация"
+                value={notes}
+                onChangeText={setNotes}
+                multiline
+                numberOfLines={3}
+                returnKeyType="done"
+                blurOnSubmit={true}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (notesRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+              />
+            </View>
 
             <Text style={styles.note}>* Обязательные поля</Text>
+            <View style={{ height: 100 }} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

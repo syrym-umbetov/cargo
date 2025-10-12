@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,10 @@ import {
   Modal,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
@@ -27,6 +31,15 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [scannedCode, setScannedCode] = useState('');
+
+  // Refs for input fields
+  const arrivalDateRef = useRef<TextInput>(null);
+  const quantityRef = useRef<TextInput>(null);
+  const weightRef = useRef<TextInput>(null);
+  const priceUsdRef = useRef<TextInput>(null);
+  const costPriceRef = useRef<TextInput>(null);
+  const notesRef = useRef<TextInput>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -188,7 +201,11 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
         animationType="slide"
         presentationStyle="pageSheet"
       >
-        <View style={styles.modalContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalContainer}
+          keyboardVerticalOffset={0}
+        >
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={resetForm}>
               <Text style={styles.cancelText}>Отмена</Text>
@@ -199,7 +216,12 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.modalContent}>
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.modalContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={true}
+          >
             <Text style={styles.scannedCodeText}>
               Штрих-код: {scannedCode}
             </Text>
@@ -240,67 +262,163 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
             )}
 
             {/* Form Fields */}
-            <Text style={styles.label}>Дата поступления</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.arrivalDate}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, arrivalDate: text }))}
-              placeholder="YYYY-MM-DD"
-            />
+            <View onLayout={(event) => {
+              if (arrivalDateRef.current) {
+                (arrivalDateRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Дата поступления</Text>
+              <TextInput
+                ref={arrivalDateRef}
+                style={styles.input}
+                value={formData.arrivalDate}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, arrivalDate: text }))}
+                placeholder="YYYY-MM-DD"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (arrivalDateRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => quantityRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Количество</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.quantity}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, quantity: text }))}
-              keyboardType="numeric"
-              placeholder="1"
-            />
+            <View onLayout={(event) => {
+              if (quantityRef.current) {
+                (quantityRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Количество</Text>
+              <TextInput
+                ref={quantityRef}
+                style={styles.input}
+                value={formData.quantity}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, quantity: text }))}
+                keyboardType="numeric"
+                placeholder="1"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (quantityRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => weightRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Вес (кг)</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.weight}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, weight: text }))}
-              keyboardType="decimal-pad"
-              placeholder="0.0"
-            />
+            <View onLayout={(event) => {
+              if (weightRef.current) {
+                (weightRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Вес (кг)</Text>
+              <TextInput
+                ref={weightRef}
+                style={styles.input}
+                value={formData.weight}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, weight: text }))}
+                keyboardType="decimal-pad"
+                placeholder="0.0"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (weightRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => priceUsdRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Цена (USD)</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.priceUsd}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, priceUsd: text }))}
-              keyboardType="decimal-pad"
-              placeholder="0.00"
-            />
+            <View onLayout={(event) => {
+              if (priceUsdRef.current) {
+                (priceUsdRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Цена (USD)</Text>
+              <TextInput
+                ref={priceUsdRef}
+                style={styles.input}
+                value={formData.priceUsd}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, priceUsd: text }))}
+                keyboardType="decimal-pad"
+                placeholder="0.00"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (priceUsdRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => costPriceRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Себестоимость</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.costPrice}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, costPrice: text }))}
-              keyboardType="decimal-pad"
-              placeholder="0.00"
-            />
+            <View onLayout={(event) => {
+              if (costPriceRef.current) {
+                (costPriceRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Себестоимость</Text>
+              <TextInput
+                ref={costPriceRef}
+                style={styles.input}
+                value={formData.costPrice}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, costPrice: text }))}
+                keyboardType="decimal-pad"
+                placeholder="0.00"
+                returnKeyType="next"
+                blurOnSubmit={false}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (costPriceRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+                onSubmitEditing={() => notesRef.current?.focus()}
+              />
+            </View>
 
-            <Text style={styles.label}>Примечания</Text>
-            <TextInput
-              style={[styles.input, styles.textArea]}
-              value={formData.notes}
-              onChangeText={(text) => setFormData(prev => ({ ...prev, notes: text }))}
-              multiline
-              numberOfLines={3}
-              placeholder="Дополнительная информация"
-            />
+            <View onLayout={(event) => {
+              if (notesRef.current) {
+                (notesRef.current as any)._offsetY = event.nativeEvent.layout.y;
+              }
+            }}>
+              <Text style={styles.label}>Примечания</Text>
+              <TextInput
+                ref={notesRef}
+                style={[styles.input, styles.textArea]}
+                value={formData.notes}
+                onChangeText={(text) => setFormData(prev => ({ ...prev, notes: text }))}
+                multiline
+                numberOfLines={3}
+                placeholder="Дополнительная информация"
+                returnKeyType="done"
+                blurOnSubmit={true}
+                onFocus={() => {
+                  setTimeout(() => {
+                    const offsetY = (notesRef.current as any)?._offsetY || 0;
+                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
+                  }, 100);
+                }}
+              />
+            </View>
 
             {latestRate && (
               <Text style={styles.exchangeRateText}>
                 Курс: 1 USD = {latestRate.rate} KZT
               </Text>
             )}
+            <View style={{ height: 100 }} />
           </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
