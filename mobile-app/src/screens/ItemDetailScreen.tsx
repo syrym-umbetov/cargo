@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   Share,
+  RefreshControl,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,8 +22,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ItemDetails'>;
 const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { itemId } = route.params;
   const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
 
-  const { data: item, isLoading } = useQuery({
+  const { data: item, isLoading, refetch } = useQuery({
     queryKey: ['item', itemId],
     queryFn: () => itemsApi.getItem(itemId),
   });
@@ -42,6 +44,17 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       );
     },
   });
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } catch (error) {
+      console.error('Refresh error:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -151,7 +164,17 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#2596be"
+            colors={['#2596be']}
+          />
+        }
+      >
         <View style={styles.card}>
           <View style={styles.row}>
             <Text style={styles.label}>Код товара:</Text>

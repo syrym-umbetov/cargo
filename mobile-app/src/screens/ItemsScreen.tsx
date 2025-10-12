@@ -19,20 +19,27 @@ type Props = BottomTabScreenProps<MainTabParamList, 'Items'>;
 const ItemsScreen: React.FC<Props> = ({ navigation }) => {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
 
   const {
     data: itemsData,
     isLoading,
-    isRefreshing,
     refetch,
   } = useQuery({
     queryKey: ['items', page, search],
     queryFn: () => itemsApi.getItems(page, 20, undefined, search || undefined),
   });
 
-  const handleRefresh = () => {
-    setPage(1);
-    refetch();
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      setPage(1);
+      await refetch();
+    } catch (error) {
+      console.error('Refresh error:', error);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -109,7 +116,12 @@ const ItemsScreen: React.FC<Props> = ({ navigation }) => {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor="#2596be"
+            colors={['#2596be']}
+          />
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

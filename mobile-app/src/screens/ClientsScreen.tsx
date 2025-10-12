@@ -22,21 +22,28 @@ const ClientsScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
   const {
     data: clientsData,
     isLoading,
-    isRefreshing,
     refetch,
   } = useQuery({
     queryKey: ['clients', page, search],
     queryFn: () => clientsApi.getClients(page, 20, search || undefined),
   });
 
-  const handleRefresh = () => {
-    setPage(1);
-    refetch();
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      setPage(1);
+      await refetch();
+    } catch (error) {
+      console.error('Refresh error:', error);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const handleClientPress = (client: Client) => {
@@ -88,7 +95,12 @@ const ClientsScreen: React.FC = () => {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContent}
         refreshControl={
-          <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor="#2596be"
+            colors={['#2596be']}
+          />
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>

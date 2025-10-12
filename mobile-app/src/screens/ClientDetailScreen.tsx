@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -20,13 +21,14 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ClientDetails'>;
 const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { clientId } = route.params;
   const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
 
-  const { data: client, isLoading: clientLoading } = useQuery({
+  const { data: client, isLoading: clientLoading, refetch: refetchClient } = useQuery({
     queryKey: ['client', clientId],
     queryFn: () => clientsApi.getClient(clientId),
   });
 
-  const { data: itemsData, isLoading: itemsLoading } = useQuery({
+  const { data: itemsData, isLoading: itemsLoading, refetch: refetchItems } = useQuery({
     queryKey: ['items', clientId],
     queryFn: () => itemsApi.getItems(1, 100, clientId),
   });
@@ -46,6 +48,17 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       );
     },
   });
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([refetchClient(), refetchItems()]);
+    } catch (error) {
+      console.error('Refresh error:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -105,7 +118,17 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor="#2596be"
+            colors={['#2596be']}
+          />
+        }
+      >
         {/* Client Info */}
         <View style={styles.infoCard}>
           <View style={styles.infoRow}>
