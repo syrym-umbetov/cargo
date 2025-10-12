@@ -16,6 +16,7 @@ import RegisterScreen from './src/screens/RegisterScreen';
 import ClientsScreen from './src/screens/ClientsScreen';
 import ItemsScreen from './src/screens/ItemsScreen';
 import ScannerScreen from './src/screens/ScannerScreen';
+import AnalyticsScreen from './src/screens/AnalyticsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import AddClientScreen from './src/screens/AddClientScreen';
 import EditClientScreen from './src/screens/EditClientScreen';
@@ -59,6 +60,9 @@ function MainTabs() {
             case 'Scanner':
               iconName = focused ? 'scan' : 'scan-outline';
               break;
+            case 'Analytics':
+              iconName = focused ? 'analytics' : 'analytics-outline';
+              break;
             case 'Profile':
               iconName = focused ? 'person' : 'person-outline';
               break;
@@ -88,6 +92,11 @@ function MainTabs() {
         name="Scanner"
         component={ScannerScreen}
         options={{ title: 'Сканер' }}
+      />
+      <Tab.Screen
+        name="Analytics"
+        component={AnalyticsScreen}
+        options={{ title: 'Аналитика' }}
       />
       <Tab.Screen
         name="Profile"

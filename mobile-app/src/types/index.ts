@@ -95,6 +95,7 @@ export type MainTabParamList = {
   Clients: undefined;
   Items: undefined;
   Scanner: undefined;
+  Analytics: undefined;
   Profile: undefined;
 };
 

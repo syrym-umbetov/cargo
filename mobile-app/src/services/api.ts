@@ -160,4 +160,40 @@ export const exchangeRatesApi = {
   },
 };
 
+export interface AnalyticsData {
+  summary: {
+    totalRevenue: number;
+    totalCost: number;
+    totalProfit: number;
+    averageMargin: number;
+    totalItems: number;
+    totalWeight: number;
+    uniqueClients: number;
+  };
+  topClients: Array<{
+    clientId: number;
+    clientName: string;
+    clientCode: string;
+    revenue: number;
+    itemsCount: number;
+  }>;
+  monthlyData: Array<{
+    month: string;
+    revenue: number;
+    profit: number;
+    itemsCount: number;
+  }>;
+}
+
+export const analyticsApi = {
+  getAnalytics: async (startDate?: string, endDate?: string): Promise<AnalyticsData> => {
+    const params: any = {};
+    if (startDate) params.startDate = startDate;
+    if (endDate) params.endDate = endDate;
+
+    const response = await api.get('/analytics', { params });
+    return response.data;
+  },
+};
+
 export default api;

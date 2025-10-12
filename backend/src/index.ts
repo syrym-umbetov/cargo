@@ -8,6 +8,7 @@ import authRoutes from './routes/auth-simple';
 import clientRoutes from './routes/clients';
 import itemRoutes from './routes/items';
 import exchangeRateRoutes from './routes/exchange-rates';
+import analyticsRoutes from './routes/analytics';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/items', itemRoutes);
 app.use('/api/exchange-rates', exchangeRateRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
