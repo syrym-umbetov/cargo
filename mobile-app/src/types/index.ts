@@ -2,6 +2,7 @@ export interface User {
   id: number;
   email: string;
   role: string;
+  clientId?: number;
   createdAt: string;
 }
 
@@ -54,6 +55,7 @@ export interface ExchangeRate {
 export interface AuthResponse {
   user: User;
   token: string;
+  client?: Client;
 }
 
 export interface ApiResponse<T> {
@@ -75,6 +77,7 @@ export interface PaginatedResponse<T> {
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
+  ClientLogin: undefined;
   MainTabs: undefined;
   ClientDetails: { clientId: number };
   AddClient: undefined;
@@ -83,6 +86,8 @@ export type RootStackParamList = {
   EditItem: { itemId: number };
   ItemDetails: { itemId: number };
   Scanner: { clientId?: number };
+  ClientDashboard: undefined;
+  ClientItemDetail: { itemId: number };
 };
 
 export type MainTabParamList = {
@@ -90,4 +95,9 @@ export type MainTabParamList = {
   Items: undefined;
   Scanner: undefined;
   Profile: undefined;
+};
+
+export type ClientTabParamList = {
+  MyItems: undefined;
+  ClientProfile: undefined;
 };

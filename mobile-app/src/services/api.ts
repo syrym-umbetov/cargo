@@ -67,6 +67,11 @@ export const authApi = {
     const response = await api.post('/auth/register', { email, password, role });
     return response.data;
   },
+
+  clientLogin: async (clientCode: string, phoneLast4: string): Promise<AuthResponse> => {
+    const response = await api.post('/auth/client-login', { clientCode, phoneLast4 });
+    return response.data;
+  },
 };
 
 export const clientsApi = {

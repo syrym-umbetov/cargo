@@ -16,6 +16,11 @@ const loginSchema = Joi.object({
   password: Joi.string().required()
 });
 
+const clientLoginSchema = Joi.object({
+  clientCode: Joi.string().required(),
+  phoneLast4: Joi.string().length(4).required()
+});
+
 router.post('/register', async (req, res) => {
   try {
     const { error, value } = registerSchema.validate(req.body);
@@ -98,6 +103,73 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.post('/client-login', async (req, res) => {
+  try {
+    const { error, value } = clientLoginSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
+    const { clientCode, phoneLast4 } = value;
+
+    // Найти клиента по коду
+    const client = await prisma.client.findUnique({
+      where: { clientCode },
+      include: { user: true }
+    });
+
+    if (!client) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Проверить последние 4 цифры телефона
+    const clientPhoneLast4 = client.phone.slice(-4);
+    if (clientPhoneLast4 !== phoneLast4) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Если у клиента еще нет пользователя, создать его
+    let user = client.user;
+    if (!user) {
+      // Создать пользователя для клиента
+      const defaultPassword = await bcrypt.hash(clientCode + phoneLast4, 10);
+      user = await prisma.user.create({
+        data: {
+          email: `${clientCode}@client.local`,
+          passwordHash: defaultPassword,
+          role: 'client',
+          clientId: client.id
+        }
+      });
+    }
+
+    // Генерировать простой токен
+    const token = `simple-token-${user.id}-${Date.now()}`;
+
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        clientId: client.id,
+        createdAt: user.createdAt
+      },
+      client: {
+        id: client.id,
+        clientCode: client.clientCode,
+        name: client.name,
+        phone: client.phone,
+        email: client.email,
+        address: client.address
+      },
+      token
+    });
+  } catch (error) {
+    console.error('Client login error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

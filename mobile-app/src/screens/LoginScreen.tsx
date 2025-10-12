@@ -94,6 +94,21 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 Нет аккаунта? Зарегистрироваться
               </Text>
             </TouchableOpacity>
+
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>или</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              style={styles.clientButton}
+              onPress={() => navigation.navigate('ClientLogin')}
+            >
+              <Text style={styles.clientButtonText}>
+                Вход для клиентов
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -161,6 +176,34 @@ const styles = StyleSheet.create({
     color: '#2596be',
     textAlign: 'center',
     fontSize: 14,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#ddd',
+  },
+  dividerText: {
+    marginHorizontal: 10,
+    color: '#999',
+    fontSize: 14,
+  },
+  clientButton: {
+    backgroundColor: '#fff',
+    paddingVertical: 15,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#2596be',
+  },
+  clientButtonText: {
+    color: '#2596be',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

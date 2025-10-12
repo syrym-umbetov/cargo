@@ -23,6 +23,9 @@ import ClientDetailScreen from './src/screens/ClientDetailScreen';
 import AddItemScreen from './src/screens/AddItemScreen';
 import EditItemScreen from './src/screens/EditItemScreen';
 import ItemDetailScreen from './src/screens/ItemDetailScreen';
+import ClientLoginScreen from './src/screens/ClientLoginScreen';
+import ClientDashboardScreen from './src/screens/ClientDashboardScreen';
+import ClientItemDetailScreen from './src/screens/ClientItemDetailScreen';
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -101,71 +104,89 @@ function AppNavigator() {
     return null; // Show loading screen here if needed
   }
 
+  const isClient = user?.role === 'client';
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           <>
-            <Stack.Screen name="MainTabs" component={MainTabs} />
-            <Stack.Screen
-              name="ClientDetails"
-              component={ClientDetailScreen}
-              options={{
-                headerShown: false
-              }}
-            />
-            <Stack.Screen
-              name="AddClient"
-              component={AddClientScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal'
-              }}
-            />
-            <Stack.Screen
-              name="EditClient"
-              component={EditClientScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal'
-              }}
-            />
-            <Stack.Screen
-              name="AddItem"
-              component={AddItemScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal'
-              }}
-            />
-            <Stack.Screen
-              name="EditItem"
-              component={EditItemScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal'
-              }}
-            />
-            <Stack.Screen
-              name="ItemDetails"
-              component={ItemDetailScreen}
-              options={{
-                headerShown: false
-              }}
-            />
-            <Stack.Screen
-              name="Scanner"
-              component={ScannerScreen}
-              options={{
-                headerShown: false,
-                presentation: 'modal'
-              }}
-            />
+            {isClient ? (
+              <>
+                <Stack.Screen name="ClientDashboard" component={ClientDashboardScreen} />
+                <Stack.Screen
+                  name="ClientItemDetail"
+                  component={ClientItemDetailScreen}
+                  options={{
+                    headerShown: false
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="MainTabs" component={MainTabs} />
+                <Stack.Screen
+                  name="ClientDetails"
+                  component={ClientDetailScreen}
+                  options={{
+                    headerShown: false
+                  }}
+                />
+                <Stack.Screen
+                  name="AddClient"
+                  component={AddClientScreen}
+                  options={{
+                    headerShown: false,
+                    presentation: 'modal'
+                  }}
+                />
+                <Stack.Screen
+                  name="EditClient"
+                  component={EditClientScreen}
+                  options={{
+                    headerShown: false,
+                    presentation: 'modal'
+                  }}
+                />
+                <Stack.Screen
+                  name="AddItem"
+                  component={AddItemScreen}
+                  options={{
+                    headerShown: false,
+                    presentation: 'modal'
+                  }}
+                />
+                <Stack.Screen
+                  name="EditItem"
+                  component={EditItemScreen}
+                  options={{
+                    headerShown: false,
+                    presentation: 'modal'
+                  }}
+                />
+                <Stack.Screen
+                  name="ItemDetails"
+                  component={ItemDetailScreen}
+                  options={{
+                    headerShown: false
+                  }}
+                />
+                <Stack.Screen
+                  name="Scanner"
+                  component={ScannerScreen}
+                  options={{
+                    headerShown: false,
+                    presentation: 'modal'
+                  }}
+                />
+              </>
+            )}
           </>
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="ClientLogin" component={ClientLoginScreen} />
           </>
         )}
       </Stack.Navigator>

@@ -3,6 +3,8 @@ import { prisma } from '../index';
 
 interface AuthRequest extends Request {
   userId?: number;
+  userRole?: string;
+  clientId?: number;
 }
 
 export const authenticateToken = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -21,11 +23,14 @@ export const authenticateToken = async (req: AuthRequest, res: Response, next: N
 
       // Verify user exists
       const user = await prisma.user.findUnique({
-        where: { id: userId }
+        where: { id: userId },
+        include: { client: true }
       });
 
       if (user) {
         req.userId = userId;
+        req.userRole = user.role;
+        req.clientId = user.clientId || undefined;
         return next();
       }
     }

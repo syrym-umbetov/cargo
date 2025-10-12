@@ -13,8 +13,11 @@ model User {
   email        String   @unique
   passwordHash String   @map("password_hash")
   role         String   @default("user")
+  clientId     Int?     @unique @map("client_id")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
+
+  client Client? @relation(fields: [clientId], references: [id])
 
   @@map("users")
 }
@@ -30,6 +33,7 @@ model Client {
   updatedAt  DateTime @updatedAt @map("updated_at")
 
   items Item[]
+  user  User?
 
   @@map("clients")
 }
