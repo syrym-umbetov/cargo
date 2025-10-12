@@ -1,0 +1,67 @@
+// Prisma schema for Cargo App
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("user")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Client {
+  id         Int      @id @default(autoincrement())
+  clientCode String   @unique @map("client_code")
+  name       String
+  phone      String
+  email      String?
+  address    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  items Item[]
+
+  @@map("clients")
+}
+
+model Item {
+  id           Int      @id @default(autoincrement())
+  clientId     Int      @map("client_id")
+  productCode  String   @map("product_code")
+  arrivalDate  DateTime @map("arrival_date") @db.Date
+  quantity     Int      @default(1)
+  weight       Decimal? @db.Decimal(10, 3)
+  priceUsd     Decimal? @map("price_usd") @db.Decimal(10, 2)
+  exchangeRate Decimal? @map("exchange_rate") @db.Decimal(10, 4)
+  amountKzt    Decimal? @map("amount_kzt") @db.Decimal(12, 2)
+  costPrice    Decimal? @map("cost_price") @db.Decimal(10, 2)
+  margin       Decimal? @db.Decimal(10, 2)
+  notes        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("items")
+}
+
+model ExchangeRate {
+  id           Int      @id @default(autoincrement())
+  currencyFrom String   @default("USD") @map("currency_from")
+  currencyTo   String   @default("KZT") @map("currency_to")
+  rate         Decimal  @db.Decimal(10, 4)
+  date         DateTime @db.Date
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("exchange_rates")
+}

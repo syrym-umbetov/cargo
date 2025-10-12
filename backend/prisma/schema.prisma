@@ -1,0 +1,67 @@
+// Prisma schema for Cargo App
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("user")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Client {
+  id         Int      @id @default(autoincrement())
+  clientCode String   @unique @map("client_code")
+  name       String
+  phone      String
+  email      String?
+  address    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  items Item[]
+
+  @@map("clients")
+}
+
+model Item {
+  id           Int      @id @default(autoincrement())
+  clientId     Int      @map("client_id")
+  productCode  String   @map("product_code")
+  arrivalDate  DateTime @map("arrival_date")
+  quantity     Int      @default(1)
+  weight       Float?
+  priceUsd     Float? @map("price_usd")
+  exchangeRate Float? @map("exchange_rate")
+  amountKzt    Float? @map("amount_kzt")
+  costPrice    Float? @map("cost_price")
+  margin       Float?
+  notes        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("items")
+}
+
+model ExchangeRate {
+  id           Int      @id @default(autoincrement())
+  currencyFrom String   @default("USD") @map("currency_from")
+  currencyTo   String   @default("KZT") @map("currency_to")
+  rate         Float
+  date         DateTime
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("exchange_rates")
+}
