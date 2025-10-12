@@ -20,11 +20,12 @@ router.get('/', async (req, res) => {
     const { page = 1, limit = 20, search } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
 
+    // For SQLite, we need to use case-insensitive search differently
     const where = search
       ? {
           OR: [
-            { name: { contains: String(search), mode: 'insensitive' as const } },
-            { clientCode: { contains: String(search), mode: 'insensitive' as const } },
+            { name: { contains: String(search) } },
+            { clientCode: { contains: String(search) } },
             { phone: { contains: String(search) } }
           ]
         }

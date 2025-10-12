@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   TextInput,
   RefreshControl,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
@@ -21,17 +22,29 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const ClientsScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1); // Reset to first page on new search
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const {
     data: clientsData,
     isLoading,
     refetch,
+    isFetching,
   } = useQuery({
-    queryKey: ['clients', page, search],
-    queryFn: () => clientsApi.getClients(page, 20, search || undefined),
+    queryKey: ['clients', page, debouncedSearch],
+    queryFn: () => clientsApi.getClients(page, 20, debouncedSearch || undefined),
   });
 
   const handleRefresh = async () => {
@@ -76,10 +89,18 @@ const ClientsScreen: React.FC = () => {
           <Ionicons name="search" size={20} color="#666" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Поиск клиентов..."
+            placeholder="Поиск по имени, коду или телефону..."
             value={search}
             onChangeText={setSearch}
           />
+          {isFetching && search.length > 0 && (
+            <ActivityIndicator size="small" color="#2596be" style={styles.searchLoader} />
+          )}
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')}>
+              <Ionicons name="close-circle" size={20} color="#999" />
+            </TouchableOpacity>
+          )}
         </View>
         <TouchableOpacity
           style={styles.addButton}
@@ -146,6 +167,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingLeft: 8,
     fontSize: 16,
+  },
+  searchLoader: {
+    marginRight: 8,
   },
   addButton: {
     backgroundColor: '#2596be',
