@@ -17,7 +17,7 @@ const getApiUrl = () => {
 
   // Get the manifest's debuggerHost which contains the local IP
   const debuggerHost = Constants.expoConfig?.hostUri;
-
+    console.log(debuggerHost)
   if (debuggerHost) {
     // Extract IP from debuggerHost (format: "192.168.0.111:8081")
     const host = debuggerHost.split(':')[0];
