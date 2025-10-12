@@ -22,7 +22,7 @@ import { clientsApi, itemsApi, exchangeRatesApi } from '../services/api';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Scanner'>;
 
-const ScannerScreen: React.FC<Props> = ({ route }) => {
+const ScannerScreen: React.FC<Props> = ({ route, navigation }) => {
   console.log('DEBUG: Scanner opened with params:', route.params);
   const clientIdFromRoute = route.params?.clientId;
   console.log('DEBUG: clientIdFromRoute:', clientIdFromRoute);
@@ -116,6 +116,11 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
     setScanned(false);
   };
 
+  const handleCancel = () => {
+    resetForm();
+    navigation.navigate('MainTabs', { screen: 'Clients' });
+  };
+
   const handleAddItem = () => {
     if (!selectedClient) {
       Alert.alert('Ошибка', 'Выберите клиента');
@@ -207,7 +212,7 @@ const ScannerScreen: React.FC<Props> = ({ route }) => {
           keyboardVerticalOffset={0}
         >
           <View style={styles.modalHeader}>
-            <TouchableOpacity onPress={resetForm}>
+            <TouchableOpacity onPress={handleCancel}>
               <Text style={styles.cancelText}>Отмена</Text>
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Добавить товар</Text>

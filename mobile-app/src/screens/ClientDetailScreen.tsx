@@ -190,13 +190,16 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
               {/* Table Header */}
               <View style={styles.tableRow}>
                 <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
-                  <Text style={styles.tableHeaderText}>КОД клиента</Text>
+                  <Text style={styles.tableHeaderText}>Код товара</Text>
+                </View>
+                <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
+                  <Text style={styles.tableHeaderText}>Себестоимость</Text>
+                </View>
+                <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
+                  <Text style={styles.tableHeaderText}>Заметки</Text>
                 </View>
                 <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
                   <Text style={styles.tableHeaderText}>Дата поступления товара</Text>
-                </View>
-                <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
-                  <Text style={styles.tableHeaderText}>Товара за числа</Text>
                 </View>
                 <View style={[styles.tableCell, styles.tableHeader, { width: 80 }]}>
                   <Text style={styles.tableHeaderText}>Вес</Text>
@@ -210,14 +213,8 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                 <View style={[styles.tableCell, styles.tableHeader, { width: 100 }]}>
                   <Text style={styles.tableHeaderText}>К оплате тг</Text>
                 </View>
-                <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
-                  <Text style={styles.tableHeaderText}>семестоимость</Text>
-                </View>
                 <View style={[styles.tableCell, styles.tableHeader, { width: 100 }]}>
                   <Text style={styles.tableHeaderText}>Маржа</Text>
-                </View>
-                <View style={[styles.tableCell, styles.tableHeader, { width: 120 }]}>
-                  <Text style={styles.tableHeaderText}>свои</Text>
                 </View>
               </View>
 
@@ -229,15 +226,20 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                   onPress={() => navigation.navigate('ItemDetails', { itemId: item.id })}
                 >
                   <View style={[styles.tableCell, { width: 120 }]}>
-                    <Text style={styles.tableCellText}>{client.clientCode}</Text>
+                    <Text style={styles.tableCellText}>{item.productCode}</Text>
+                  </View>
+                  <View style={[styles.tableCell, { width: 120 }]}>
+                    <Text style={styles.tableCellText}>
+                      {item.costPrice ? `${item.costPrice.toFixed(2)}` : '-'}
+                    </Text>
+                  </View>
+                  <View style={[styles.tableCell, { width: 120 }]}>
+                    <Text style={styles.tableCellText}>{item.notes || '-'}</Text>
                   </View>
                   <View style={[styles.tableCell, { width: 120 }]}>
                     <Text style={styles.tableCellText}>
                       {new Date(item.arrivalDate).toLocaleDateString('ru-RU')}
                     </Text>
-                  </View>
-                  <View style={[styles.tableCell, { width: 120 }]}>
-                    <Text style={styles.tableCellText}>{item.productCode}</Text>
                   </View>
                   <View style={[styles.tableCell, { width: 80 }]}>
                     <Text style={styles.tableCellText}>{item.weight || '-'}</Text>
@@ -255,18 +257,10 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                       {item.amountKzt ? `${item.amountKzt.toFixed(2)}` : '-'}
                     </Text>
                   </View>
-                  <View style={[styles.tableCell, { width: 120 }]}>
-                    <Text style={styles.tableCellText}>
-                      {item.costPrice ? `${item.costPrice.toFixed(2)}` : '-'}
-                    </Text>
-                  </View>
                   <View style={[styles.tableCell, { width: 100 }]}>
                     <Text style={styles.tableCellText}>
                       {item.margin ? `${item.margin.toFixed(2)}%` : '-'}
                     </Text>
-                  </View>
-                  <View style={[styles.tableCell, { width: 120 }]}>
-                    <Text style={styles.tableCellText}>{item.notes || '-'}</Text>
                   </View>
                 </TouchableOpacity>
               ))}
