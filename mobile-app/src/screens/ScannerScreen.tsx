@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rescanButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   saveText: {
     fontSize: 16,
-    color: '#007AFF',
+    color: '#2596be',
     fontWeight: '600',
   },
   modalContent: {
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   clientChipSelected: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
   },
   clientChipText: {
     color: '#333',

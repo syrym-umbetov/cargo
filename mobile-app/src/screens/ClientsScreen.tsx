@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   addButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   },
   itemsCount: {
     fontSize: 12,
-    color: '#007AFF',
+    color: '#2596be',
     fontWeight: '500',
   },
   emptyContainer: {
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   emptyButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,

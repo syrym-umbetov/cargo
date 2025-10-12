@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     paddingVertical: 15,
     borderRadius: 8,
     marginBottom: 15,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   linkText: {
-    color: '#007AFF',
+    color: '#2596be',
     textAlign: 'center',
     fontSize: 14,
   },

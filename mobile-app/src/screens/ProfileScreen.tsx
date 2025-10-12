@@ -103,7 +103,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
             <Ionicons
               name={item.icon as keyof typeof Ionicons.glyphMap}
               size={24}
-              color="#007AFF"
+              color="#2596be"
             />
             <Text style={styles.menuItemText}>{item.title}</Text>
             <Ionicons name="chevron-forward" size={20} color="#ccc" />
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   },
   userRole: {
     fontSize: 14,
-    color: '#007AFF',
+    color: '#2596be',
     marginBottom: 2,
   },
   joinDate: {

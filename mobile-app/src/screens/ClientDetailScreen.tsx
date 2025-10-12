@@ -33,7 +33,7 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
+          <ActivityIndicator size="large" color="#2596be" />
         </View>
       </SafeAreaView>
     );
@@ -99,7 +99,7 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </View>
 
         {itemsLoading ? (
-          <ActivityIndicator size="large" color="#007AFF" style={{ marginTop: 20 }} />
+          <ActivityIndicator size="large" color="#2596be" style={{ marginTop: 20 }} />
         ) : items.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="cube-outline" size={64} color="#ccc" />
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#2596be',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,

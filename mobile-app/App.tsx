@@ -8,6 +8,7 @@ import { Image } from 'react-native';
 
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import { RootStackParamList, MainTabParamList } from './src/types';
+import { Colors } from './src/constants/colors';
 
 // Screens
 import LoginScreen from './src/screens/LoginScreen';
@@ -61,7 +62,7 @@ function MainTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#007AFF',
+        tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: 'gray',
         headerShown: true,
         headerLeft: () => <LogoTitle />,

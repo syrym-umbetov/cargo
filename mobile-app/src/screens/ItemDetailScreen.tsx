@@ -112,7 +112,7 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#007AFF" />
+          <ActivityIndicator size="large" color="#2596be" />
         </View>
       </SafeAreaView>
     );
@@ -137,7 +137,7 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         <Text style={styles.headerTitle}>Детали товара</Text>
         <View style={styles.headerActions}>
           <TouchableOpacity onPress={handleShare} style={styles.headerButton}>
-            <Ionicons name="share-outline" size={24} color="#007AFF" />
+            <Ionicons name="share-outline" size={24} color="#2596be" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleDelete} style={styles.headerButton}>
             <Ionicons name="trash-outline" size={24} color="#FF3B30" />
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   highlight: {
-    color: '#007AFF',
+    color: '#2596be',
     fontSize: 18,
   },
   success: {
