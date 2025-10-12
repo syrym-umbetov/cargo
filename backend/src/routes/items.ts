@@ -5,11 +5,25 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 
-const itemSchema = Joi.object({
+const itemCreateSchema = Joi.object({
   clientId: Joi.number().required(),
   productCode: Joi.string().required(),
   arrivalDate: Joi.date().required(),
   quantity: Joi.number().integer().min(1).default(1),
+  weight: Joi.number().positive().optional(),
+  priceUsd: Joi.number().positive().optional(),
+  exchangeRate: Joi.number().positive().optional(),
+  amountKzt: Joi.number().positive().optional(),
+  costPrice: Joi.number().positive().optional(),
+  margin: Joi.number().optional(),
+  notes: Joi.string().optional()
+});
+
+const itemUpdateSchema = Joi.object({
+  clientId: Joi.number().optional(),
+  productCode: Joi.string().optional(),
+  arrivalDate: Joi.date().optional(),
+  quantity: Joi.number().integer().min(1).optional(),
   weight: Joi.number().positive().optional(),
   priceUsd: Joi.number().positive().optional(),
   exchangeRate: Joi.number().positive().optional(),
@@ -89,7 +103,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { error, value } = itemSchema.validate(req.body);
+    const { error, value } = itemCreateSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
@@ -134,7 +148,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { error, value } = itemSchema.validate(req.body);
+    const { error, value } = itemUpdateSchema.validate(req.body);
 
     if (error) {
       return res.status(400).json({ error: error.details[0].message });

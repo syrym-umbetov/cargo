@@ -21,6 +21,7 @@ import AddClientScreen from './src/screens/AddClientScreen';
 import EditClientScreen from './src/screens/EditClientScreen';
 import ClientDetailScreen from './src/screens/ClientDetailScreen';
 import AddItemScreen from './src/screens/AddItemScreen';
+import EditItemScreen from './src/screens/EditItemScreen';
 import ItemDetailScreen from './src/screens/ItemDetailScreen';
 
 const queryClient = new QueryClient();
@@ -132,6 +133,14 @@ function AppNavigator() {
             <Stack.Screen
               name="AddItem"
               component={AddItemScreen}
+              options={{
+                headerShown: false,
+                presentation: 'modal'
+              }}
+            />
+            <Stack.Screen
+              name="EditItem"
+              component={EditItemScreen}
               options={{
                 headerShown: false,
                 presentation: 'modal'

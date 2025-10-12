@@ -136,6 +136,12 @@ const ItemDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Детали товара</Text>
         <View style={styles.headerActions}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('EditItem', { itemId })}
+            style={styles.headerButton}
+          >
+            <Ionicons name="create-outline" size={24} color="#2596be" />
+          </TouchableOpacity>
           <TouchableOpacity onPress={handleShare} style={styles.headerButton}>
             <Ionicons name="share-outline" size={24} color="#2596be" />
           </TouchableOpacity>

@@ -80,6 +80,7 @@ export type RootStackParamList = {
   AddClient: undefined;
   EditClient: { clientId: number };
   AddItem: { clientId?: number };
+  EditItem: { itemId: number };
   ItemDetails: { itemId: number };
   Scanner: { clientId?: number };
 };
