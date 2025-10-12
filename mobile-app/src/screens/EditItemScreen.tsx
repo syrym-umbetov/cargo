@@ -283,33 +283,39 @@ const EditItemScreen: React.FC<Props> = ({ route, navigation }) => {
                     scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
                   }, 100);
                 }}
-                onSubmitEditing={() => exchangeRateRef.current?.focus()}
+                onSubmitEditing={() => costPriceRef.current?.focus()}
               />
             </View>
 
-            <View onLayout={(event) => {
-              if (exchangeRateRef.current) {
-                (exchangeRateRef.current as any)._offsetY = event.nativeEvent.layout.y;
-              }
-            }}>
+            <View>
               <Text style={styles.label}>Курс (тг/$)</Text>
-              <TextInput
-                ref={exchangeRateRef}
-                style={styles.input}
-                placeholder="0.00"
-                value={exchangeRate}
-                onChangeText={setExchangeRate}
-                keyboardType="decimal-pad"
-                returnKeyType="next"
-                blurOnSubmit={false}
-                onFocus={() => {
-                  setTimeout(() => {
-                    const offsetY = (exchangeRateRef.current as any)?._offsetY || 0;
-                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
-                  }, 100);
-                }}
-                onSubmitEditing={() => costPriceRef.current?.focus()}
-              />
+              <View style={[styles.input, styles.readOnlyInput]}>
+                <Text style={styles.readOnlyText}>
+                  {exchangeRate || 'Загрузка...'}
+                </Text>
+              </View>
+              {latestRate && parseFloat(exchangeRate) !== latestRate.rate && (
+                <TouchableOpacity
+                  style={styles.updateRateButton}
+                  onPress={() => {
+                    setExchangeRate(latestRate.rate.toString());
+                    Alert.alert(
+                      'Курс обновлен',
+                      `Курс изменен на актуальный: ${latestRate.rate} KZT`
+                    );
+                  }}
+                >
+                  <Ionicons name="refresh" size={16} color="#2596be" />
+                  <Text style={styles.updateRateButtonText}>
+                    Обновить до актуального курса ({latestRate.rate} KZT)
+                  </Text>
+                </TouchableOpacity>
+              )}
+              <Text style={styles.helperText}>
+                {latestRate && parseFloat(exchangeRate) === latestRate.rate
+                  ? 'Используется актуальный курс'
+                  : 'Курс установлен на момент добавления товара'}
+              </Text>
             </View>
 
             <Text style={styles.label}>К оплате (тг)</Text>
@@ -473,6 +479,39 @@ const styles = StyleSheet.create({
   textArea: {
     height: 80,
     textAlignVertical: 'top',
+  },
+  readOnlyInput: {
+    backgroundColor: '#f8f8f8',
+    justifyContent: 'center',
+  },
+  readOnlyText: {
+    fontSize: 16,
+    color: '#666',
+    fontWeight: '600',
+  },
+  helperText: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  updateRateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#e8f4f8',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginTop: 8,
+    marginBottom: 4,
+    borderWidth: 1,
+    borderColor: '#2596be',
+  },
+  updateRateButtonText: {
+    fontSize: 13,
+    color: '#2596be',
+    fontWeight: '600',
+    marginLeft: 6,
   },
   note: {
     fontSize: 14,

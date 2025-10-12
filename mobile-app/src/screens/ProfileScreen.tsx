@@ -9,11 +9,16 @@ import {
   Linking,
 } from 'react-native';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import { MainTabParamList } from '../types';
+import { MainTabParamList, RootStackParamList } from '../types';
 import { useAuth } from '../context/AuthContext';
 
-type Props = BottomTabScreenProps<MainTabParamList, 'Profile'>;
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<MainTabParamList, 'Profile'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
 
 const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   const { user, logout } = useAuth();
@@ -59,6 +64,11 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
       icon: 'scan-outline',
       title: 'Сканер штрих-кодов',
       onPress: () => navigation.navigate('Scanner'),
+    },
+    {
+      icon: 'settings-outline',
+      title: 'Настройки',
+      onPress: () => navigation.navigate('Settings'),
     },
   ];
 

@@ -86,6 +86,7 @@ export type RootStackParamList = {
   EditItem: { itemId: number };
   ItemDetails: { itemId: number };
   Scanner: { clientId?: number };
+  Settings: undefined;
   ClientDashboard: undefined;
   ClientItemDetail: { itemId: number };
 };

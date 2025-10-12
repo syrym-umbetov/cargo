@@ -26,6 +26,7 @@ import ItemDetailScreen from './src/screens/ItemDetailScreen';
 import ClientLoginScreen from './src/screens/ClientLoginScreen';
 import ClientDashboardScreen from './src/screens/ClientDashboardScreen';
 import ClientItemDetailScreen from './src/screens/ClientItemDetailScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -177,6 +178,13 @@ function AppNavigator() {
                   options={{
                     headerShown: false,
                     presentation: 'modal'
+                  }}
+                />
+                <Stack.Screen
+                  name="Settings"
+                  component={SettingsScreen}
+                  options={{
+                    headerShown: false
                   }}
                 />
               </>

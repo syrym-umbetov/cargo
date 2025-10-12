@@ -260,33 +260,20 @@ const AddItemScreen: React.FC<Props> = ({ route, navigation }) => {
                     scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
                   }, 100);
                 }}
-                onSubmitEditing={() => exchangeRateRef.current?.focus()}
+                onSubmitEditing={() => costPriceRef.current?.focus()}
               />
             </View>
 
-            <View onLayout={(event) => {
-              if (exchangeRateRef.current) {
-                (exchangeRateRef.current as any)._offsetY = event.nativeEvent.layout.y;
-              }
-            }}>
+            <View>
               <Text style={styles.label}>Курс (тг/$)</Text>
-              <TextInput
-                ref={exchangeRateRef}
-                style={styles.input}
-                placeholder="0.00"
-                value={exchangeRate}
-                onChangeText={setExchangeRate}
-                keyboardType="decimal-pad"
-                returnKeyType="next"
-                blurOnSubmit={false}
-                onFocus={() => {
-                  setTimeout(() => {
-                    const offsetY = (exchangeRateRef.current as any)?._offsetY || 0;
-                    scrollViewRef.current?.scrollTo({ y: offsetY - 20, animated: true });
-                  }, 100);
-                }}
-                onSubmitEditing={() => costPriceRef.current?.focus()}
-              />
+              <View style={[styles.input, styles.readOnlyInput]}>
+                <Text style={styles.readOnlyText}>
+                  {exchangeRate || 'Загрузка...'}
+                </Text>
+              </View>
+              <Text style={styles.helperText}>
+                Курс устанавливается автоматически из настроек
+              </Text>
             </View>
 
             <Text style={styles.label}>К оплате (тг)</Text>
@@ -445,6 +432,21 @@ const styles = StyleSheet.create({
   textArea: {
     height: 80,
     textAlignVertical: 'top',
+  },
+  readOnlyInput: {
+    backgroundColor: '#f8f8f8',
+    justifyContent: 'center',
+  },
+  readOnlyText: {
+    fontSize: 16,
+    color: '#666',
+    fontWeight: '600',
+  },
+  helperText: {
+    fontSize: 12,
+    color: '#999',
+    marginTop: 4,
+    marginBottom: 8,
   },
   note: {
     fontSize: 14,

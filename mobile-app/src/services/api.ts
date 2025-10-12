@@ -140,7 +140,7 @@ export const itemsApi = {
 };
 
 export const exchangeRatesApi = {
-  getExchangeRates: async (currencyFrom = 'USD', currencyTo = 'KZT', limit = 10): Promise<ExchangeRate[]> => {
+  getRates: async (limit = 10, currencyFrom = 'USD', currencyTo = 'KZT'): Promise<ExchangeRate[]> => {
     const response = await api.get('/exchange-rates', {
       params: { currencyFrom, currencyTo, limit }
     });
@@ -154,7 +154,7 @@ export const exchangeRatesApi = {
     return response.data;
   },
 
-  createExchangeRate: async (rateData: Omit<ExchangeRate, 'id' | 'createdAt'>): Promise<ExchangeRate> => {
+  createRate: async (rateData: { currencyFrom: string; currencyTo: string; rate: number; date: string }): Promise<ExchangeRate> => {
     const response = await api.post('/exchange-rates', rateData);
     return response.data;
   },
