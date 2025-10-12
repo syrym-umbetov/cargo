@@ -18,6 +18,7 @@ import ItemsScreen from './src/screens/ItemsScreen';
 import ScannerScreen from './src/screens/ScannerScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import AddClientScreen from './src/screens/AddClientScreen';
+import EditClientScreen from './src/screens/EditClientScreen';
 import ClientDetailScreen from './src/screens/ClientDetailScreen';
 import AddItemScreen from './src/screens/AddItemScreen';
 import ItemDetailScreen from './src/screens/ItemDetailScreen';
@@ -115,6 +116,14 @@ function AppNavigator() {
             <Stack.Screen
               name="AddClient"
               component={AddClientScreen}
+              options={{
+                headerShown: false,
+                presentation: 'modal'
+              }}
+            />
+            <Stack.Screen
+              name="EditClient"
+              component={EditClientScreen}
               options={{
                 headerShown: false,
                 presentation: 'modal'

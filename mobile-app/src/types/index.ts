@@ -78,6 +78,7 @@ export type RootStackParamList = {
   MainTabs: undefined;
   ClientDetails: { clientId: number };
   AddClient: undefined;
+  EditClient: { clientId: number };
   AddItem: { clientId?: number };
   ItemDetails: { itemId: number };
   Scanner: { clientId?: number };

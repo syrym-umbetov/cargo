@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { RootStackParamList } from '../types';
 import { clientsApi, itemsApi } from '../services/api';
 
@@ -18,6 +19,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ClientDetails'>;
 
 const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { clientId } = route.params;
+  const queryClient = useQueryClient();
 
   const { data: client, isLoading: clientLoading } = useQuery({
     queryKey: ['client', clientId],
@@ -28,6 +30,41 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
     queryKey: ['items', clientId],
     queryFn: () => itemsApi.getItems(1, 100, clientId),
   });
+
+  const deleteClientMutation = useMutation({
+    mutationFn: clientsApi.deleteClient,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] });
+      Alert.alert('Успех', 'Клиент удален', [
+        { text: 'OK', onPress: () => navigation.goBack() }
+      ]);
+    },
+    onError: (error: any) => {
+      Alert.alert(
+        'Ошибка',
+        error.response?.data?.error || 'Не удалось удалить клиента'
+      );
+    },
+  });
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Удалить клиента?',
+      'Это действие нельзя отменить. Все товары клиента также будут удалены.',
+      [
+        { text: 'Отмена', style: 'cancel' },
+        {
+          text: 'Удалить',
+          style: 'destructive',
+          onPress: () => deleteClientMutation.mutate(clientId)
+        }
+      ]
+    );
+  };
+
+  const handleEdit = () => {
+    navigation.navigate('EditClient', { clientId });
+  };
 
   if (clientLoading) {
     return (
@@ -58,7 +95,14 @@ const ClientDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <Ionicons name="arrow-back" size={28} color="#333" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{client.name}</Text>
-        <View style={{ width: 28 }} />
+        <View style={styles.headerActions}>
+          <TouchableOpacity onPress={handleEdit} style={styles.headerButton}>
+            <Ionicons name="create-outline" size={24} color="#2596be" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.headerButton}>
+            <Ionicons name="trash-outline" size={24} color="#FF3B30" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView style={styles.content}>
@@ -225,6 +269,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  headerButton: {
+    padding: 4,
   },
   content: {
     flex: 1,
