@@ -26,7 +26,7 @@ sleep 2
 
 # Start Prisma Studio
 echo -e "${GREEN}Starting Prisma Studio...${NC}"
-(cd "$SCRIPT_DIR/backend" && npx prisma studio) &
+(cd "$SCRIPT_DIR/backend" && npx prisma studio --port 5555) &
 PRISMA_PID=$!
 
 # Wait a bit
@@ -42,6 +42,7 @@ echo -e "${GREEN}Backend:${NC} http://localhost:3000"
 echo -e "${GREEN}Backend (network):${NC} http://${IP}:3000"
 echo -e "${GREEN}Prisma Studio:${NC} http://localhost:5555"
 echo -e "${GREEN}Expo Metro:${NC} http://localhost:8081"
+echo -e "\n${YELLOW}Note: PostgreSQL must be running on port 5433${NC}"
 echo -e "\n${BLUE}Press Ctrl+C to stop all services${NC}\n"
 
 # Trap Ctrl+C and kill all processes
