@@ -30,7 +30,9 @@
       "package": "com.yourcompany.cargoapp",
       "versionCode": 1,
       "permissions": [
-        "CAMERA"
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -46,7 +48,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "your-project-id"
+        "projectId": "0aef27ff-dca6-47d9-b2f0-d21799f521d8"
       }
     }
   }
