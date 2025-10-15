@@ -12,7 +12,7 @@ import {
 // Auto-detect API URL based on device
 const getApiUrl = () => {
   if (!__DEV__) {
-    return 'https://your-production-api.com/api';
+    return 'https://cargo-0oci.onrender.com/api';
   }
 
   // Get the manifest's debuggerHost which contains the local IP
