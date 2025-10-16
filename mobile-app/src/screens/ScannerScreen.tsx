@@ -19,6 +19,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList, Client, Item } from '../types';
 import { clientsApi, itemsApi, exchangeRatesApi } from '../services/api';
+import WebBarcodeScanner from '../components/WebBarcodeScanner';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Scanner'>;
 
@@ -177,32 +178,39 @@ const ScannerScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <CameraView
-        ref={cameraRef}
-        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: [
-            "aztec",
-            "ean13",
-            "ean8",
-            "qr",
-            "pdf417",
-            "upc_e",
-            "datamatrix",
-            "code39",
-            "code93",
-            "itf14",
-            "codabar",
-            "code128",
-            "upc_a"
-          ],
-        }}
-        facing="back"
-        enableTorch={torch}
-        zoom={zoom}
-        autofocus="on"
-        style={StyleSheet.absoluteFillObject}
-      />
+      {Platform.OS === 'web' ? (
+        <WebBarcodeScanner
+          onBarCodeScanned={(data) => handleBarCodeScanned({ type: 'web', data })}
+          isScanning={!scanned}
+        />
+      ) : (
+        <CameraView
+          ref={cameraRef}
+          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+          barcodeScannerSettings={{
+            barcodeTypes: [
+              "aztec",
+              "ean13",
+              "ean8",
+              "qr",
+              "pdf417",
+              "upc_e",
+              "datamatrix",
+              "code39",
+              "code93",
+              "itf14",
+              "codabar",
+              "code128",
+              "upc_a"
+            ],
+          }}
+          facing="back"
+          enableTorch={torch}
+          zoom={zoom}
+          autofocus="on"
+          style={StyleSheet.absoluteFillObject}
+        />
+      )}
 
       <View style={styles.topControls}>
         <TouchableOpacity
@@ -554,10 +562,11 @@ const styles = StyleSheet.create({
   },
   bottomControls: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 20,
     left: 0,
     right: 0,
     alignItems: 'center',
+    gap: 12,
   },
   rescanButton: {
     backgroundColor: '#2596be',
