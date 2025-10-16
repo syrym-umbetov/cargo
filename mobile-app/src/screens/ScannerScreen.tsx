@@ -212,6 +212,15 @@ const ScannerScreen: React.FC<Props> = ({ route, navigation }) => {
         />
       )}
 
+      <View style={styles.topLeftControls}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="close" size={32} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.topControls}>
         <TouchableOpacity
           style={styles.torchButton}
@@ -496,6 +505,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  topLeftControls: {
+    position: 'absolute',
+    top: 60,
+    left: 20,
+    zIndex: 10,
+  },
+  closeButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 10,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#fff',
   },
   topControls: {
     position: 'absolute',
