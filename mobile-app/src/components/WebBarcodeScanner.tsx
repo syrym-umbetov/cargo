@@ -29,12 +29,24 @@ const WebBarcodeScanner: React.FC<WebBarcodeScannerProps> = ({
           return;
         }
 
-        // Prefer back camera
-        const backCamera = videoInputDevices.find(device =>
+        // Prefer back camera - try multiple strategies
+        let backCamera = videoInputDevices.find(device =>
           device.label.toLowerCase().includes('back') ||
-          device.label.toLowerCase().includes('rear') ||
-          device.label.toLowerCase().includes('environment')
-        ) || videoInputDevices[0];
+          device.label.toLowerCase().includes('rear')
+        );
+
+        if (!backCamera) {
+          backCamera = videoInputDevices.find(device =>
+            device.label.toLowerCase().includes('environment')
+          );
+        }
+
+        // If still not found, use the last camera (usually back on mobile)
+        if (!backCamera) {
+          backCamera = videoInputDevices[videoInputDevices.length - 1];
+        }
+
+        console.log('Selected camera:', backCamera.label);
 
         if (videoRef.current && isScanning) {
           setIsReady(true);
