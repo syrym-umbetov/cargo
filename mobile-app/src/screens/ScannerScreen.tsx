@@ -31,6 +31,9 @@ const ScannerScreen: React.FC<Props> = ({ route, navigation }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [scannedCode, setScannedCode] = useState('');
+  const [torch, setTorch] = useState(false);
+  const [zoom, setZoom] = useState(0);
+  const cameraRef = useRef<any>(null);
 
   // Refs for input fields
   const arrivalDateRef = useRef<TextInput>(null);
@@ -175,17 +178,69 @@ const ScannerScreen: React.FC<Props> = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <CameraView
+        ref={cameraRef}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
         barcodeScannerSettings={{
-          barcodeTypes: ["qr", "ean13", "ean8", "upc_a", "upc_e", "code128", "code39", "code93"],
+          barcodeTypes: [
+            "aztec",
+            "ean13",
+            "ean8",
+            "qr",
+            "pdf417",
+            "upc_e",
+            "datamatrix",
+            "code39",
+            "code93",
+            "itf14",
+            "codabar",
+            "code128",
+            "upc_a"
+          ],
         }}
+        facing="back"
+        enableTorch={torch}
+        zoom={zoom}
+        autofocus="on"
         style={StyleSheet.absoluteFillObject}
       />
+
+      <View style={styles.topControls}>
+        <TouchableOpacity
+          style={styles.torchButton}
+          onPress={() => setTorch(!torch)}
+        >
+          <Ionicons
+            name={torch ? "flashlight" : "flashlight-outline"}
+            size={28}
+            color="#fff"
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.zoomControls}>
+        <TouchableOpacity
+          style={styles.zoomButton}
+          onPress={() => setZoom(Math.max(0, zoom - 0.1))}
+          disabled={zoom <= 0}
+        >
+          <Ionicons name="remove" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.zoomText}>{Math.round(zoom * 100)}%</Text>
+        <TouchableOpacity
+          style={styles.zoomButton}
+          onPress={() => setZoom(Math.min(1, zoom + 0.1))}
+          disabled={zoom >= 1}
+        >
+          <Ionicons name="add" size={24} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.overlay}>
         <View style={styles.scanArea} />
         <Text style={styles.instructions}>
-          Наведите камеру на штрих-код товара
+          {scanned
+            ? "Код успешно отсканирован!"
+            : "Поместите штрих-код в зеленую рамку"}
         </Text>
       </View>
 
@@ -434,18 +489,61 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
   },
+  topControls: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 10,
+  },
+  torchButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 12,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  zoomControls: {
+    position: 'absolute',
+    bottom: 70,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 16,
+  },
+  zoomButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 10,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  zoomText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    minWidth: 60,
+    textAlign: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
   scanArea: {
-    width: 250,
-    height: 250,
-    borderWidth: 2,
-    borderColor: '#fff',
-    borderRadius: 12,
-    backgroundColor: 'transparent',
+    width: 300,
+    height: 300,
+    borderWidth: 3,
+    borderColor: '#00ff00',
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 255, 0, 0.1)',
   },
   instructions: {
     color: '#fff',
